@@ -1,0 +1,12 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["AJUA778725.com.test.poc-deeplink123-321111"],
+        "components": [
+          { "/": "*", "comment": "любой путь на домене открывает апп" }
+        ]
+      }
+    ]
+  }
+}
