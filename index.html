@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Deeplink POC — Universal Link test</title>
+<title>DemoBank — Universal Link test</title>
 <style>
   body{font-family:-apple-system,system-ui,sans-serif;margin:0;padding:20px;
        background:#f4f5f7;color:#1a1a1a;line-height:1.45}
@@ -18,7 +18,7 @@
 </style>
 </head>
 <body>
-<h1>Deeplink POC — Universal Link</h1>
+<h1>DemoBank — Universal Link</h1>
 
 <div class="warn">
   ⚠️ <b>Тапать по ссылке прямо тут — НЕ откроет апп.</b> Universal Link не срабатывает при
@@ -32,12 +32,13 @@
 <p id="copied" class="ok" style="display:none">Скопировано — вставь в Telegram и тапни там.</p>
 
 <h2>2. Тапни её из Telegram</h2>
-<p>Если апп установлен и AASA сработал → откроется приложение (<code>entrypoint=universal_link</code>),
-без браузера. Если нет — Safari покажет эту страницу (web-fallback).</p>
+<p>Если DemoBank установлен и AASA сработал → откроется приложение напрямую, без браузера.
+SDK получит этот URL через <code>handleDeeplinkUserActivity:isColdStart:</code>.
+Если апп не установлен / AASA не сматчился — Safari покажет web-fallback (<code>/open</code>).</p>
 
 <h2>Проверка, что AASA отдаётся</h2>
 <div class="link"><span id="aasa">…</span></div>
-<p>Должен вернуться JSON с твоим <code>appID</code>.</p>
+<p>Должен вернуться JSON с <code>appID = AJUA778725.ru.facct.DemoBank-legacy</code>.</p>
 
 <script>
   // Ссылку строим от текущего домена — ничего хардкодить не нужно.

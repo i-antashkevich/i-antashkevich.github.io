@@ -2,9 +2,9 @@
   "applinks": {
     "details": [
       {
-        "appIDs": ["AJUA778725.com.test.poc-deeplink123-321111"],
+        "appIDs": ["AJUA778725.ru.facct.DemoBank-legacy"],
         "components": [
-          { "/": "*", "comment": "любой путь на домене открывает апп" }
+          { "/": "*", "comment": "любой путь на домене открывает DemoBank" }
         ]
       }
     ]
