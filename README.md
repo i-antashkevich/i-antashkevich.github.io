@@ -1,7 +1,13 @@
-# Universal Links для DemoBank через GitHub Pages (бесплатный HTTPS)
+# Deeplink-тест DemoBank через GitHub Pages (бесплатный HTTPS)
 
-Цель: тапаешь `https://i-antashkevich.github.io/open?...` из Telegram → iOS открывает DemoBank
-напрямую, без браузера. SDK получает URL через `handleDeeplinkUserActivity:isColdStart:`.
+Один сайт покрывает ОБА кейса (py-сервер не нужен):
+
+1. **Custom scheme (диплинк из браузера)** — на `index.html` кнопка `demobank://open?...`.
+   Тапаешь в Safari → iOS открывает DemoBank → SDK получает URL через
+   `scene(_:openURLContexts:)` → `handleDeeplinkURLContexts:isColdStart:`.
+2. **Universal Link** — копируешь `https://i-antashkevich.github.io/open?...`, тапаешь из Telegram →
+   iOS открывает DemoBank напрямую → SDK получает URL через
+   `scene(_:continue:)` → `handleDeeplinkUserActivity:isColdStart:`.
 
 ## Содержимое репозитория (корень домена)
 

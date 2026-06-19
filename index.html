@@ -3,47 +3,61 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>DemoBank — Universal Link test</title>
+<title>DemoBank — Deeplink test</title>
 <style>
   body{font-family:-apple-system,system-ui,sans-serif;margin:0;padding:20px;
        background:#f4f5f7;color:#1a1a1a;line-height:1.45}
   h1{font-size:20px} h2{font-size:15px;margin-top:22px}
   .link{background:#fff;border-radius:10px;padding:12px;margin:10px 0;
         word-break:break-all;font-size:13px;box-shadow:0 1px 2px rgba(0,0,0,.07)}
-  button{background:#1558d6;color:#fff;border:0;border-radius:10px;padding:14px 18px;
-         font-size:16px;font-weight:700;width:100%;margin:8px 0}
+  a.btn,button{display:block;text-align:center;text-decoration:none;color:#fff;border:0;
+       border-radius:10px;padding:14px 18px;font-size:16px;font-weight:700;width:100%;
+       margin:8px 0;box-sizing:border-box;cursor:pointer}
+  .scheme{background:#1558d6} .copy{background:#0a7d33}
   .warn{background:#fff3cd;border:1px solid #ffe08a;border-radius:10px;padding:12px;font-size:13px}
   .ok{color:#0a7d33;font-weight:700}
   code{background:#e6e8eb;padding:1px 5px;border-radius:5px}
 </style>
 </head>
 <body>
-<h1>DemoBank — Universal Link</h1>
+<h1>DemoBank — Deeplink test</h1>
+<p>Открой эту страницу на iPhone. Сперва зайди сюда (домен «прогревается»), потом тестируй
+оба кейса ниже. Логи в Console.app — фильтр subsystem <code>gibsdk</code>, category <code>Deeplink</code>.</p>
 
+<h2>Кейс 1 — Custom scheme (диплинк из браузера)</h2>
+<p>Тапни кнопку прямо здесь, в Safari. iOS спросит «Открыть в DemoBank?» → Открыть.
+SDK получит URL через <code>scene(_:openURLContexts:)</code> →
+<code>handleDeeplinkURLContexts:isColdStart:</code>. <code>sourceApplication</code> = браузер.</p>
+<a class="btn scheme" id="scheme" href="#">▶ Открыть в DemoBank (demobank://)</a>
+<div class="link" id="schemeUrl">…</div>
+
+<h2>Кейс 2 — Universal Link (Telegram / любой апп)</h2>
 <div class="warn">
-  ⚠️ <b>Тапать по ссылке прямо тут — НЕ откроет апп.</b> Universal Link не срабатывает при
-  переходе внутри того же домена/Safari. Нужно <b>скопировать ссылку и тапнуть её из другого
-  приложения</b> (Telegram «Saved Messages», Заметки, Mail).
+  ⚠️ <b>Тапать по UL прямо тут — НЕ откроет апп.</b> Universal Link не срабатывает при переходе
+  внутри того же домена/Safari. Скопируй ссылку и тапни её <b>из другого приложения</b>
+  (Telegram «Saved Messages», Заметки, Mail).
 </div>
-
-<h2>1. Скопируй тестовую ссылку</h2>
 <div class="link" id="ul">…</div>
-<button id="copy">📋 Скопировать ссылку</button>
+<button class="copy" id="copy">📋 Скопировать UL-ссылку</button>
 <p id="copied" class="ok" style="display:none">Скопировано — вставь в Telegram и тапни там.</p>
-
-<h2>2. Тапни её из Telegram</h2>
-<p>Если DemoBank установлен и AASA сработал → откроется приложение напрямую, без браузера.
-SDK получит этот URL через <code>handleDeeplinkUserActivity:isColdStart:</code>.
-Если апп не установлен / AASA не сматчился — Safari покажет web-fallback (<code>/open</code>).</p>
+<p>Если DemoBank установлен и AASA сматчился → апп откроется напрямую, без браузера. SDK получит
+URL через <code>scene(_:continue:)</code> → <code>handleDeeplinkUserActivity:isColdStart:</code>.
+<code>sourceApplication</code> для UL <b>отсутствует</b> (источник iOS не сообщает).</p>
 
 <h2>Проверка, что AASA отдаётся</h2>
 <div class="link"><span id="aasa">…</span></div>
 <p>Должен вернуться JSON с <code>appID = AJUA778725.ru.facct.DemoBank-legacy</code>.</p>
 
 <script>
-  // Ссылку строим от текущего домена — ничего хардкодить не нужно.
   var q = "click_id=tg_test&ref=partner_x&utm_source=telegram&utm_medium=social"
         + "&utm_campaign=summer_2026&state=eyJ1aWQiOiJhbGljZSJ9&sig=9f86d081884c7d65&nonce=r7Hk2p";
+
+  // Кейс 1 — custom scheme (открывается прямо из Safari).
+  var scheme = "demobank://open?" + q;
+  document.getElementById("scheme").href = scheme;
+  document.getElementById("schemeUrl").textContent = scheme;
+
+  // Кейс 2 — universal link (на текущем домене; скопировать → в Telegram).
   var ul = location.origin + "/open?" + q;
   var aasa = location.origin + "/.well-known/apple-app-site-association";
   document.getElementById("ul").textContent = ul;
